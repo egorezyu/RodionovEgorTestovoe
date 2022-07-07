@@ -64,4 +64,28 @@ class NetworkManager{
         
         
     }
+    func getImage(urlImage : String) async throws -> UIImage? {
+            var image : UIImage?
+            guard let url = URL(string: "https://vkus-sovet.ru"  + urlImage) else{
+                throw GetDataException.invalidUrl
+            }
+            let (data,response) = try await URLSession.shared.data(from: url, delegate: nil)
+            guard let response = response as? HTTPURLResponse,
+                  response.statusCode >= 200 && response.statusCode < 300 else{
+                      throw GetDataException.badResponse
+                  }
+            
+            
+            image = UIImage(data: data)
+            
+            if let image = image {
+                return image
+            }
+            else{
+                return nil
+            }
+           
+            
+            
+        }
 }

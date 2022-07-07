@@ -125,7 +125,7 @@ class SecondCollectionViewCell: UICollectionViewCell {
     }
     private func setConstraintsForImage(){
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.topAnchor.constraint(equalTo: hStack.topAnchor,constant: 20).isActive = true
+        image.topAnchor.constraint(equalTo: hStack.bottomAnchor,constant: 5).isActive = true
         image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         image.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
