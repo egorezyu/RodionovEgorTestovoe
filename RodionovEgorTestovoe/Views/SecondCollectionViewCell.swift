@@ -107,9 +107,12 @@ class SecondCollectionViewCell: UICollectionViewCell {
         subType.text = menu.content
         subType.textColor = .gray
         price.text = menu.price + " Р/"
-        price.textColor = .gray
-        weight.text = menu.weight + "."
-        weight.textColor = .white
+        price.textColor = .white
+        if let weigt = menu.weight{
+            weight.text = weigt + "."
+        }
+        
+        weight.textColor = .gray
         if menu.spice != nil{
             pepper.image =  UIImage(named: "pepper")
             

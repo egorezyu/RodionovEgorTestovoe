@@ -77,10 +77,36 @@ class ViewController: UIViewController {
         
     }
     private func setNavigationTitle(){
-        self.navigationItem.title = "VKUSSOVET"
        
         
-        self.navigationItem.titleView?.backgroundColor = .white
+       
+        
+        
+        let logo = UIImage(named: "logo")
+        let imageView = UIImageView(image:logo)
+        let title = UILabel()
+        title.text = "VKUSSOVET"
+        title.textColor = .white
+        title.font = UIFont.boldSystemFont(ofSize: 30)
+        imageView.contentMode = .scaleAspectFit
+        if let navB = navigationController?.navigationBar{
+            navB.addSubview(imageView)
+            navB.addSubview(title)
+            
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.leadingAnchor.constraint(equalTo: navB.leadingAnchor,constant: 10).isActive = true
+            imageView.centerYAnchor.constraint(equalTo: navB.centerYAnchor).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            imageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            
+            title.translatesAutoresizingMaskIntoConstraints = false
+            title.leadingAnchor.constraint(equalTo: imageView.trailingAnchor,constant: 10).isActive = true
+            title.centerYAnchor.constraint(equalTo: navB.centerYAnchor).isActive = true
+            
+        }
+       
+        
+        
         
         self.navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -98,9 +124,9 @@ class ViewController: UIViewController {
 //            let navBarHeightPercentage = navB.frame.height * 0.7
             phoneImage.translatesAutoresizingMaskIntoConstraints = false
             phoneImage.trailingAnchor.constraint(equalTo: navB.trailingAnchor,constant: -20).isActive = true
-            phoneImage.bottomAnchor.constraint(equalTo: navB.bottomAnchor,constant: -10).isActive = true
-            phoneImage.widthAnchor.constraint(equalToConstant: 40).isActive = true
-            phoneImage.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            phoneImage.centerYAnchor.constraint(equalTo: navB.centerYAnchor).isActive = true
+            phoneImage.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            phoneImage.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
             
         }
@@ -120,7 +146,7 @@ class ViewController: UIViewController {
         setConstraintsForCollectionView()
     }
     private func setConstraintsForCollectionView(){
-        collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * 0.35)
+        collectionView.frame = CGRect(x: 20, y: 0, width: view.frame.width - 20, height: view.frame.height * 0.35)
         
     }
     private func setFood(){
@@ -169,8 +195,8 @@ class ViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 30
-        layout.minimumInteritemSpacing = 3
-        layout.itemSize = CGSize(width: (view.frame.width / 2) - 3, height: (view.frame.width / 1.5) - 3)
+        layout.minimumInteritemSpacing = 10
+        layout.itemSize = CGSize(width: (view.frame.width / 2) - 10, height: (view.frame.width / 1.5) - 3)
         secondCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         secondCollectionView.register(SecondCollectionViewCell.self, forCellWithReuseIdentifier: SecondCollectionViewCell.identifier)
         secondCollectionView.dataSource = self
@@ -181,7 +207,7 @@ class ViewController: UIViewController {
         
     }
     private func setConstraintsForSecondCollectionView(){
-        secondCollectionView.frame = CGRect(x: 0, y: collectionView.frame.height + 30, width: view.frame.width, height: view.frame.height * 0.50)
+        secondCollectionView.frame = CGRect(x: 5, y: collectionView.frame.height + 30, width: view.frame.width - 10, height: view.frame.height * 0.50)
         
     }
     
@@ -242,10 +268,12 @@ extension ViewController : UICollectionViewDelegate,UICollectionViewDataSource{
         self.kind.text = typesOfFood?.menuList[selectedIndex].name ?? ""
         self.collectionView.reloadData()
         
+        
 //        self.secondCollectionView.reloadData()
         if let idString = typesOfFood?.menuList[selectedIndex].menuID,let idInt = Int(idString){
             getAccurrateTypeOfFood(id: idInt)
         }
+       
 
        
         

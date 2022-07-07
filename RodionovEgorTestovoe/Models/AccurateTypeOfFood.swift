@@ -31,6 +31,6 @@ struct MenuListForAccurateFood : Codable{
     var name : String
     var content : String
     var price : String
-    var weight : String
+    var weight : String?
     var spice : String?
 }
