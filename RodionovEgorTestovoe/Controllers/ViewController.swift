@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     private var collectionView : UICollectionView!
     private var secondCollectionView : UICollectionView!
     private var images : [UIImage?] = []
+    private var secondImages : [UIImage?] = []
     private var typesOfFood : FoodType?
     private var accurateTypeOfFood : AccurateTypeOfFood?
     private var selectedIndex : Int = -1
@@ -51,23 +52,41 @@ class ViewController: UIViewController {
             switch result{
                 
             case .success(let data):
-                DispatchQueue.main.async { [weak self] in
-                    if let self = self{
-                    do{
-                        
-        
-                        let acc = try JSONDecoder().decode(AccurateTypeOfFood.self, from: data)
-                        self.accurateTypeOfFood = acc
-                        self.secondCollectionView.reloadData()
-                        
-                        
-                    }
-                    catch{
-                        print(error)
-                    }
-                        
+                do{
                     
+    
+                    let acc = try JSONDecoder().decode(AccurateTypeOfFood.self, from: data)
+                    self.accurateTypeOfFood = acc
+                    DispatchQueue.main.async {[weak self] in
+                        self?.accurateTypeOfFood = acc
                     }
+                    guard let accC = acc.menuList else{
+                        return
+                    }
+                
+                    for element in accC {
+                        NetworkManager.netWork.getData(url: "https://vkus-sovet.ru/" + element.image,method: "GET") { result in
+                            switch result{
+                                
+                            case .success(let data):
+                                DispatchQueue.main.async {[weak self] in
+                                    self?.secondImages.append(UIImage(data: data))
+                                    self?.secondCollectionView.reloadData()
+                                }
+                            case .failure(let error):
+                                print(error)
+                            }
+                        }
+                        
+                      
+                        
+                    }
+                    
+                    
+                    
+                }
+                catch{
+                    print(error)
                 }
                 
             case .failure(let error):
@@ -279,13 +298,20 @@ extension ViewController : UICollectionViewDelegate,UICollectionViewDataSource{
         else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as! SecondCollectionViewCell
             if let accType = accurateTypeOfFood?.menuList{
-                cell.initMenuItem(menu: accType[indexPath.row])
+                
+                if ((secondImages.count) <= indexPath.row){
+                    cell.initMenuItem(menu: accType[indexPath.row])
+                }
+                else{
+                    cell.initMenuItem(menu: accType[indexPath.row], image: secondImages[indexPath.row])
+                }
             }
             
             return cell
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        secondImages = []
         selectedIndex = indexPath.row
         self.kind.text = typesOfFood?.menuList[selectedIndex].name ?? ""
         self.collectionView.reloadData()

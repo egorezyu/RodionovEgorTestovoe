@@ -37,6 +37,7 @@ class SecondCollectionViewCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 20
 //        contentView.layer.borderWidth = 3
 //        contentView.layer.borderColor = UIColor.cyan.cgColor
+        image.layer.cornerRadius = 20
         contentView.backgroundColor = .black
         pepper.contentMode = .scaleAspectFit
         subType.lineBreakMode = .byWordWrapping
@@ -92,16 +93,8 @@ class SecondCollectionViewCell: UICollectionViewCell {
         price.heightAnchor.constraint(equalToConstant: contentView.frame.width * 0.1).isActive = true
         
     }
-    func initMenuItem(menu : MenuListForAccurateFood){
-        if let url = URL(string: menu.image){
-            do{
-                try self.image.image = UIImage(data: Data(contentsOf: url))
-            }
-            catch{
-                print(error)
-            }
-            
-        }
+    func initMenuItem(menu : MenuListForAccurateFood,image : UIImage? = nil){
+        self.image.image = image
         type.text = menu.name
         type.textColor = .white
         subType.text = menu.content
@@ -132,7 +125,7 @@ class SecondCollectionViewCell: UICollectionViewCell {
     }
     private func setConstraintsForImage(){
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.topAnchor.constraint(equalTo: hStack.topAnchor,constant: 10).isActive = true
+        image.topAnchor.constraint(equalTo: hStack.topAnchor,constant: 20).isActive = true
         image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         image.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true

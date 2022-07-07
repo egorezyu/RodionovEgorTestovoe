@@ -22,6 +22,8 @@ class CusCollectionViewCell: UICollectionViewCell {
         type.font = UIFont.boldSystemFont(ofSize: 12)
         contentView.backgroundColor = .gray
         contentView.layer.cornerRadius = 20
+        image.layer.cornerRadius = 20
+        
         contentView.layer.borderColor = UIColor.gray.cgColor
         contentView.layer.borderWidth = 3
         contentView.addSubview(image)
