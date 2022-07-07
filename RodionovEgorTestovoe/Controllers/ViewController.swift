@@ -11,6 +11,7 @@ class ViewController: UIViewController {
     private var phoneImage : UIImageView = UIImageView(image: UIImage(systemName: "phone"))
     private var collectionView : UICollectionView!
     private var secondCollectionView : UICollectionView!
+    private var images : [UIImage?] = []
     private var typesOfFood : FoodType?
     private var accurateTypeOfFood : AccurateTypeOfFood?
     private var selectedIndex : Int = -1
@@ -154,20 +155,34 @@ class ViewController: UIViewController {
             switch result{
                 
             case .success(let data):
-                DispatchQueue.main.async { [weak self] in
-                    if let self = self{
-                    do{
-        
-                        let typeOfFoods = try JSONDecoder().decode(FoodType.self, from: data)
-                        self.typesOfFood = typeOfFoods
+                do{
+    
+                    let typeOfFoods = try JSONDecoder().decode(FoodType.self, from: data)
+                    DispatchQueue.main.async {[weak self] in
+                        self?.typesOfFood = typeOfFoods
+                    }
+                
+                    for element in typeOfFoods.menuList{
+                        NetworkManager.netWork.getData(url: "https://vkus-sovet.ru/" + element.image,method: "GET") { result in
+                            switch result{
+                                
+                            case .success(let data):
+                                DispatchQueue.main.async {[weak self] in
+                                    self?.images.append(UIImage(data: data))
+                                    self?.collectionView.reloadData()
+                                }
+                            case .failure(let error):
+                                print(error)
+                            }
+                        }
+                        
+                      
                         
                     }
-                    catch{
-                        print(error)
-                    }
-                        
-                    self.collectionView.reloadData()
-                    }
+                    
+                }
+                catch{
+                    print(error)
                 }
                 
             case .failure(let error):
@@ -242,7 +257,14 @@ extension ViewController : UICollectionViewDelegate,UICollectionViewDataSource{
             
             if let menuList = typesOfFood?.menuList{
                 cell.initMenuList(menuList: menuList[indexPath.row])
+                if ((images.count) <= indexPath.row){
+                    cell.initMenuList(menuList: menuList[indexPath.row])
+                }
+                else{
+                    cell.initMenuList(menuList: menuList[indexPath.row], image: images[indexPath.row])
+                }
             }
+            
             if selectedIndex == indexPath.row{
                 cell.contentView.backgroundColor = .systemBlue
             }

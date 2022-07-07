@@ -23,20 +23,24 @@ class NetworkManager{
         
     }
     //working with network with escaping completion and result
-    func getData(url : String ,params : [String:Int] = [:], comletion : @escaping ((Result<Data,Error>) -> Void)){
+    func getData(url : String ,method : String = "POST", params : [String:Int] = [:], comletion : @escaping ((Result<Data,Error>) -> Void)){
         guard let url = URL(string: url) else{
             comletion(.failure(GetDataException.invalidUrl))
             return
         }
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
-            comletion(.failure(GetDataException.invalidUrl))
-            return
-            
+        request.httpMethod = method
+        if method == "POST"{
+            guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+                comletion(.failure(GetDataException.invalidUrl))
+                return
+                
+            }
+            request.httpBody = httpBody
         }
-        print(params)
-        request.httpBody = httpBody
+        
+        
+        
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {

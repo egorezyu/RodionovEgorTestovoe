@@ -39,17 +39,9 @@ class CusCollectionViewCell: UICollectionViewCell {
 
         
     }
-    func initMenuList(menuList : MenuList){
-        if let url = URL(string: menuList.image){
-            do{
-                try self.image.image = UIImage(data: Data(contentsOf: url))
-            }
-            catch{
-                print(error)
-            }
-            
-        }
-
+    func initMenuList(menuList : MenuList,image : UIImage? = nil){
+        self.image.image = image
+      
         
         
         type.text = menuList.name
